@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "ignore": [
+    "Video/Interveiw.mp4",
+    "Video/Hero Video.mov"
+  ],
   "headers": [
     {
       "source": "/Video/(.*)",
