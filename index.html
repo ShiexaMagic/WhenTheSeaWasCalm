@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>When Sea Was Calm: The Sea Remembers</title>
+<meta name="description" content="A companion site to the animated film 'When Sea Was Calm', tracing the Black Sea's witness from the 1992–93 Abkhazia war to Ukraine today. Selected for the Annecy Festival." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=15" />
+<script defer src="script.js?v=9"></script>
+</head>
+<body>
+
+<!-- 20 Steps production logo -->
+<a href="https://www.20steps.ge/in-production/sokhumi" target="_blank" rel="noopener" class="steps-logo-link" aria-label="20 Steps production page">
+  <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 0h110v71.955H0V0Zm0 74.436h110V110H0V74.436Zm34.238-27.675c-1.176.68-2.22 1.285-3.134 1.846H52.37v12.55H7.375c.298-14.164 7.238-19.448 18.281-25.907l.965-.568c5.342-3.14 8.14-4.785 8.14-8.46 0-2.421-1.27-4.11-4.105-4.11-3.955 0-4.85 3.524-4.403 8H8.568c0-12.482 7.91-20.476 22.386-20.476 13.73 0 21.193 6.459 21.193 16.734 0 9.687-6.194 13.577-16.79 19.742l-1.117.647-.002.002Zm68.388-10.924c0 15.486-8.283 26.568-23.58 26.568-15.297 0-23.655-9.468-23.655-26.568 0-15.265 7.836-26.2 23.655-26.2 15.745 0 23.58 11.008 23.58 26.2Zm-28.878 0c0 10.715.97 14.165 5.298 14.165 1.567 0 2.761-.514 3.582-1.688 1.343-1.982 1.716-5.798 1.716-12.477 0-10.568-.895-13.724-5.298-13.724-1.866 0-3.06.44-3.806 1.761-1.194 1.982-1.492 5.651-1.492 11.963ZM26.74 96.06c0 4.874-4.828 6.258-9.41 6.258-5.482 0-9.765-1.855-9.955-6.729l7.01-.498c-.028 2.465 1.527 3.018 3 3.018 1.363 0 2.427-.415 2.427-1.661 0-.948-1.07-1.17-2.973-1.566l-.005-.001-.004-.001c-.263-.055-.542-.113-.837-.177-5.073-1.08-8.182-2.27-8.182-6.59 0-4.154 4.037-6.12 8.946-6.12 4.855 0 9 1.523 9.41 6.147l-6.846.665c-.055-2.216-1.173-2.686-2.564-2.686-1.364 0-2.155.498-2.155 1.44 0 .914 1.255 1.19 3.246 1.606 5.046.997 8.892 2.16 8.892 6.895Zm12.801 5.788v-13.79h5.755v-5.594H26.94v5.593h5.782v13.791h6.82Zm23.083 0v-4.874h-9.11v-2.575h8.183V89.8h-8.182v-2.465h9.11v-4.873h-15.93v19.384h15.93Zm8.754 0v-5.76h2.591c4.473 0 8.674-.886 8.674-6.812 0-6.01-4.446-6.813-8.892-6.813H64.67v19.385h6.71Zm0-14.622h1.746c1.555 0 2.727.167 2.727 2.022 0 1.855-1.172 2.132-2.727 2.132h-1.746v-4.154Zm21.838 15.092c4.582 0 9.41-1.384 9.41-6.258 0-4.735-3.846-5.898-8.892-6.895-1.99-.415-3.245-.692-3.245-1.606 0-.942.79-1.44 2.154-1.44 1.391 0 2.51.47 2.564 2.686l6.846-.665c-.406-4.522-4.555-6.147-9.41-6.147-4.91 0-8.946 1.966-8.946 6.12 0 4.32 3.11 5.51 8.183 6.59.296.064.577.123.841.178h.004c1.902.397 2.973.62 2.973 1.567 0 1.246-1.064 1.661-2.427 1.661-1.473 0-3.028-.553-3-3.018l-7.01.498c.19 4.874 4.473 6.729 9.955 6.729Z"></path></svg>
+</a>
+
+<!-- Ambient sea sound toggle (optional, off by default) -->
+<button id="soundToggle" class="sound-toggle" aria-label="Toggle ambient sound" title="Ambient waves">
+  <span class="sound-icon">~</span>
+</button>
+
+<!-- Progress bar = rising tide -->
+<div class="tide-progress" aria-hidden="true"><div class="tide-fill"></div></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <!-- Full-cover looping video background (z-index 1) -->
+  <video class="hero-video-bg" autoplay muted loop playsinline preload="auto">
+    <source src="Video/Hero%20Video.mov" type="video/quicktime" />
+    <source src="Video/Hero%20Video.mov" type="video/mp4" />
+  </video>
+
+  <!-- "WHEN THE SEA" sits BEHIND the waves (z-index 2). -->
+  <h1 class="hero-title-behind scroll-title" aria-label="When The Sea Was Calm">
+    <span class="behind-line">WHEN THE SEA</span>
+  </h1>
+
+  <svg class="wave-layer wave-back" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#1a5a78" d="M0,120 C240,160 480,80 720,120 C960,160 1200,80 1440,120 L1440,320 L0,320 Z"></path>
+  </svg>
+  <svg class="wave-layer wave-mid" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#103a52" d="M0,120 C240,160 480,80 720,120 C960,160 1200,80 1440,120 L1440,320 L0,320 Z"></path>
+  </svg>
+  <svg class="wave-layer wave-front" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#0b2030" d="M0,120 C240,160 480,80 720,120 C960,160 1200,80 1440,120 L1440,320 L0,320 Z"></path>
+  </svg>
+
+  <!-- "WAS CALM" sits IN FRONT of all waves -->
+  <div class="hero-title-front scroll-title" aria-hidden="true">
+    <span class="front-line">WAS CALM</span>
+  </div>
+  <div class="hero-content">
+    <p class="kicker">An animated film · Annecy Festival 2026 Selection</p>
+    <div class="scroll-hint" aria-hidden="true">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="chapter intro-chapter">
+  <div class="container narrow">
+    <p class="chapter-eyebrow">A note before we begin</p>
+    <h2>It isn't really a war story. <em>It's a sea story.</em></h2>
+    <p class="lede">
+      <strong>When Sea Was Calm</strong> takes place in Georgia in 1992 and 1993, during the war in Abkhazia:
+      thirteen months that turned a coastline of summer sanatoria into a place people fled from on foot,
+      across a mountain pass, in winter.
+    </p>
+    <p class="lede">
+      The sea didn't stop watching when that war ended. It's the same water that touches Sokhumi, Sevastopol
+      and Odesa. What follows isn't a list of battles. It's a short walk along one coastline, and the things
+      that have happened on it since the film's story ends. Every claim below is sourced; numbers in brackets
+      link to <a href="#sources" class="inline-link">Sources</a> at the bottom.
+    </p>
+    <p class="chapter-eyebrow">Long before 1992</p>
+    <p class="lede">
+      The violence of the 1990s did not appear from nowhere. Soviet governance built power through party
+      appointments, security structures, and managed autonomy, which shaped who held office in Abkhazia and
+      how political legitimacy was framed when the USSR collapsed.<sup class="cite"><a href="#s13">13</a></sup>
+      In the post-Soviet vacuum, those networks became part of the institutional base for separatist
+      mobilization.<sup class="cite"><a href="#s14">14</a></sup>
+    </p>
+    <p class="lede">
+      The deeper historical picture is longer than the late Soviet period. In mainstream historical scholarship,
+      Colchis, Egrisi (Lazica), the Kingdom of Abkhazia, and later polities such as the Kingdom of Imereti are
+      usually treated as successive political formations within the wider western Georgian historical space,
+      including the territory of present-day Abkhazia.<sup class="cite"><a href="#s15">15</a></sup>
+      Historians still debate identity, terminology, and political interpretation, but these debates concern how
+      the past is interpreted, not whether the region sits inside a long and continuous Black Sea Caucasian
+      historical continuum.<sup class="cite"><a href="#s16">16</a></sup>
+    </p>
+  </div>
+</section>
+
+<!-- ============ TIMELINE ============ -->
+<section class="timeline" id="timeline">
+
+  <!-- 1992 -->
+  <article class="event" data-year="1992" data-mood="dawn">
+    <div class="event-grid">
+      <div class="event-year">
+        <span class="year-num">1992</span>
+        <span class="year-label">August</span>
+      </div>
+      <div class="event-body">
+        <h3>The first shot reaches the shore</h3>
+        <p>
+          On 14 August, Georgian National Guard units move into Abkhazia, officially to protect a railway line.
+          Within hours it's a war.<sup class="cite"><a href="#s1">1</a></sup> Over the next thirteen months,
+          fighters and heavy weapons cross the Caucasus from the Russian side: North Caucasian volunteers,
+          Cossack units, and, as Human Rights Watch later documented, support from parts of the Russian military
+          that Moscow officially denied.<sup class="cite"><a href="#s1">1</a></sup> Sokhumi, Gagra, Ochamchire,
+          places people knew from holiday photos, turn into front lines.
+        </p>
+        <p class="event-meta">Abkhazia · Georgia · Russian Federation</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 1993 -->
+  <article class="event" data-year="1993" data-mood="storm">
+    <div class="event-grid reverse">
+      <div class="event-year">
+        <span class="year-num">1993</span>
+        <span class="year-label">September</span>
+      </div>
+      <div class="event-body">
+        <h3>The fall of Sokhumi</h3>
+        <p>
+          A July ceasefire breaks down. On 27 September, Sokhumi falls.<sup class="cite"><a href="#s1">1</a></sup>
+          In the days and weeks that follow, around 250,000 ethnic Georgians are pushed out of Abkhazia,
+          one of the largest forced displacements in post-Soviet Europe.<sup class="cite"><a href="#s2">2</a></sup>
+          Many leave on foot through the Kodori Gorge and the Svaneti mountains; the people who didn't make
+          it across are still being counted. Three OSCE summits (Budapest 1994, Lisbon 1996, Istanbul 1999)
+          would later use the words "ethnic cleansing" for what happened.<sup class="cite"><a href="#s3">3</a></sup>
+        </p>
+        <p class="event-meta">Around 250,000 displaced · Sokhumi fell 27 September 1993</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2008 -->
+  <article class="event" data-year="2008" data-mood="storm">
+    <div class="event-grid">
+      <div class="event-year">
+        <span class="year-num">2008</span>
+        <span class="year-label">August</span>
+      </div>
+      <div class="event-body">
+        <h3>Five days in August</h3>
+        <p>
+          Fighting flares around South Ossetia on the night of 7–8 August. Within hours, Russian armoured
+          columns are inside Georgia, and a second front opens in Abkhazia. The war lasts five days.
+          The EU's own fact-finding mission, led by Heidi Tagliavini, later concluded that the opening shots
+          were Georgian, and that Russia's response went "far beyond the reasonable limits of defence."<sup class="cite"><a href="#s4">4</a></sup>
+          On 26 August, Moscow recognises Abkhazia and South Ossetia as independent states; almost no one else
+          does.<sup class="cite"><a href="#s5">5</a></sup> Roughly a fifth of Georgia's internationally recognised
+          territory remains outside Tbilisi's control to this day.<sup class="cite"><a href="#s6">6</a></sup>
+        </p>
+        <p class="event-meta">7–12 August 2008 · Tagliavini Report, 2009</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2014 -->
+  <article class="event bridge" data-year="2014" data-mood="dark">
+    <div class="event-grid reverse">
+      <div class="event-year">
+        <span class="year-num">2014</span>
+        <span class="year-label">February to March</span>
+      </div>
+      <div class="event-body">
+        <h3>The sea changes coasts</h3>
+        <p>
+          In late February, soldiers without insignia (the "little green men") take over the Crimean
+          parliament and key infrastructure. A hurried referendum follows on 16 March; Russia annexes the
+          peninsula days later.<sup class="cite"><a href="#s7">7</a></sup> The UN General Assembly votes 100
+          to 11 to call the annexation invalid.<sup class="cite"><a href="#s8">8</a></sup> Fighting begins in
+          Donbas in April. From Tbilisi, the script is recognisable: unmarked troops, a referendum, a
+          "protection" mission. Many Georgians say out loud what their grandparents felt in 1993:
+          <em>we've seen this film before.</em>
+        </p>
+        <p class="event-meta">Crimea annexed March 2014 · UN GA Res. 68/262</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2022 -->
+  <article class="event" data-year="2022" data-mood="dark">
+    <div class="event-grid">
+      <div class="event-year">
+        <span class="year-num">2022</span>
+        <span class="year-label">February 24</span>
+      </div>
+      <div class="event-body">
+        <h3>Full-scale invasion</h3>
+        <p>
+          Before dawn on 24 February, Russia attacks Ukraine from three directions. Two weeks later, the UN
+          General Assembly demands an immediate withdrawal, with 141 states in favour.<sup class="cite"><a href="#s9">9</a></sup>
+          Mariupol is besieged for almost three months and largely destroyed.<sup class="cite"><a href="#s10">10</a></sup>
+          On 14 April, the Russian Black Sea flagship <em>Moskva</em> sinks after Ukrainian Neptune missile
+          strikes, making her the largest warship lost in combat since 1982.<sup class="cite"><a href="#s11">11</a></sup>
+          Grain corridors out of Odesa close, reopen, close again. The Black Sea isn't a backdrop now.
+          It's the front.
+        </p>
+        <p class="event-meta">Largest war in Europe since 1945</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- TODAY -->
+  <article class="event today" data-year="today" data-mood="now">
+    <div class="event-grid reverse">
+      <div class="event-year">
+        <span class="year-num">2026</span>
+        <span class="year-label">today</span>
+      </div>
+      <div class="event-body">
+        <h3>Still watching</h3>
+        <p>
+          Ukraine is still fighting. In Tbilisi, in spring 2024, tens of thousands fill Rustaveli Avenue
+          night after night against a "foreign agents" law modelled almost word-for-word on a Russian
+          one.<sup class="cite"><a href="#s12">12</a></sup> Abkhazia and South Ossetia are still under
+          Russian troops.<sup class="cite"><a href="#s6">6</a></sup> A whole generation of Georgian kids
+          has grown up never having seen Sokhumi. A whole generation of Ukrainian kids is growing up with
+          a phone app that tells them when to go to the basement.
+        </p>
+        <p>
+          And the sea keeps washing the same shore. The same sea.
+        </p>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- ============ THE FILM ============ -->
+<section class="film">
+  <div class="container narrow">
+    <p class="chapter-eyebrow">The film</p>
+    <h2>When Sea Was Calm</h2>
+    <p class="lede">
+      An animated short set in the summer of 1992, before the war reaches every house. A child's-eye view
+      of a coastline that's about to disappear from the maps the family knows.
+    </p>
+    <ul class="film-meta">
+      <li><span>Format</span> Animated short</li>
+      <li><span>Setting</span> Abkhazia, Georgia · 1992–1993</li>
+      <li><span>Selected</span> Annecy International Animation Film Festival, 2026</li>
+    </ul>
+    <blockquote class="pull-quote">
+      We made this film about a war that never really finished, so that the next one wouldn't have to be
+      explained from the beginning.
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ INTERVIEW ============ -->
+<section class="chapter interview-chapter">
+  <div class="container narrow">
+    <p class="chapter-eyebrow">Primary witness</p>
+    <h2>Andrey Kozyrev on the 1990s</h2>
+    <p class="lede">
+      <strong>Andrey Kozyrev</strong> was Russia's first Foreign Minister after the Soviet collapse and a direct participant in every major decision of the 1990s: the dissolution of the USSR, the wars in Abkhazia and Chechnya, NATO expansion, and the choice between Yeltsin and Zhuganov in 1996. In this interview, he recounts how many of the era's largest problems often stemmed from accidental, absurd mistakes—and how Russian state authorities deliberately supplied weapons to Abkhazi separatists, a decision that shifted the balance of the war.<sup class="cite"><a href="#s17">17</a></sup>
+    </p>
+    <p>
+      Kozyrev also speaks candidly about how Russia's political establishment deliberately cultivated an image of NATO as an enemy, who benefited from that narrative, and why the 1996 election was never as binary as history now suggests.
+    </p>
+    <div class="interview-link">
+      <a href="https://www.youtube.com/watch?v=AWGuTEtv7xs" target="_blank" rel="noopener" class="btn-primary">Watch full interview on YouTube</a>
+      <p class="interview-meta">Russian with English subtitles · approx. 1 hour</p>
+    </div>
+    
+    <div class="interview-video">
+      <video controls preload="metadata" aria-label="Andrey Kozyrev interview video">
+        <source src="Video/Interveiw.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section class="sources" id="sources">
+  <div class="container narrow">
+    <p class="chapter-eyebrow">Sources & further reading</p>
+    <h2>Where these numbers come from</h2>
+    <p class="sources-intro">
+      Everything stated as fact above is drawn from public reporting by human-rights organisations,
+      international institutions, and major news outlets. Links open in a new tab.
+    </p>
+    <ol class="source-list">
+      <li id="s1">
+        <strong>Human Rights Watch,</strong> <em>Georgia/Abkhazia: Violations of the Laws of War and Russia's Role in the Conflict</em> (March 1995). The most detailed independent account of the 1992–93 war, including documented Russian military involvement.
+        <a href="https://www.hrw.org/reports/1995/Georgia2.htm" target="_blank" rel="noopener">hrw.org</a>
+      </li>
+      <li id="s2">
+        <strong>UNHCR / Internal Displacement Monitoring Centre:</strong> figures of roughly 250,000 ethnic Georgians displaced from Abkhazia in 1992–93, many still registered as IDPs in Georgia today.
+        <a href="https://www.internal-displacement.org/countries/georgia/" target="_blank" rel="noopener">internal-displacement.org</a>
+      </li>
+      <li id="s3">
+        <strong>OSCE Summit Declarations,</strong> Budapest 1994, Lisbon 1996, Istanbul 1999. All three formally describe the expulsion of ethnic Georgians from Abkhazia as ethnic cleansing.
+        <a href="https://www.osce.org/files/f/documents/3/4/39554.pdf" target="_blank" rel="noopener">Budapest 1994 (PDF)</a> ·
+        <a href="https://www.osce.org/files/f/documents/0/2/39539.pdf" target="_blank" rel="noopener">Istanbul 1999 (PDF)</a>
+      </li>
+      <li id="s4">
+        <strong>Independent International Fact-Finding Mission on the Conflict in Georgia</strong> (the Tagliavini Report), commissioned by the EU, September 2009.
+        <a href="https://web.archive.org/web/20091007030130/http://www.ceiig.ch/Report.html" target="_blank" rel="noopener">Full report (archive)</a>
+      </li>
+      <li id="s5">
+        <strong>BBC News,</strong> "Russia recognises Georgian rebels," 26 August 2008.
+        <a href="http://news.bbc.co.uk/2/hi/europe/7582181.stm" target="_blank" rel="noopener">bbc.co.uk</a>
+      </li>
+      <li id="s6">
+        <strong>U.S. State Department & Council of Europe:</strong> both continue to describe Abkhazia and South Ossetia (≈20% of Georgia's territory) as Russian-occupied.
+        <a href="https://www.state.gov/u-s-relations-with-georgia/" target="_blank" rel="noopener">state.gov</a>
+      </li>
+      <li id="s7">
+        <strong>Reuters / BBC,</strong> coverage of the seizure of Crimean parliament (27 February 2014) and the 16 March 2014 referendum.
+        <a href="https://www.bbc.com/news/world-europe-26644082" target="_blank" rel="noopener">bbc.com</a>
+      </li>
+      <li id="s8">
+        <strong>UN General Assembly Resolution 68/262,</strong> "Territorial integrity of Ukraine," 27 March 2014. Adopted 100–11 (with 58 abstentions); declares the Crimea referendum invalid.
+        <a href="https://digitallibrary.un.org/record/767565" target="_blank" rel="noopener">UN Digital Library</a>
+      </li>
+      <li id="s9">
+        <strong>UN General Assembly Resolution ES-11/1,</strong> "Aggression against Ukraine," 2 March 2022. Adopted 141–5.
+        <a href="https://digitallibrary.un.org/record/3959039" target="_blank" rel="noopener">UN Digital Library</a>
+      </li>
+      <li id="s10">
+        <strong>OHCHR / Associated Press,</strong> reporting on the siege of Mariupol (24 February – 20 May 2022) and the destruction of the city.
+        <a href="https://www.ohchr.org/en/news/2022/06/ukraine-civilian-casualty-update-13-june-2022" target="_blank" rel="noopener">ohchr.org</a> ·
+        <a href="https://apnews.com/hub/mariupol" target="_blank" rel="noopener">AP coverage</a>
+      </li>
+      <li id="s11">
+        <strong>Reuters,</strong> "Russian missile cruiser Moskva sinks in Black Sea," 14 April 2022.
+        <a href="https://www.reuters.com/world/europe/russia-says-moskva-warship-has-sunk-after-fire-tass-2022-04-14/" target="_blank" rel="noopener">reuters.com</a>
+      </li>
+      <li id="s12">
+        <strong>Reuters / Radio Free Europe,</strong> reporting on Georgia's "foreign agents" law and the mass protests of April–May 2024.
+        <a href="https://www.reuters.com/world/europe/georgia-passes-foreign-agent-law-despite-mass-protests-eu-warnings-2024-05-14/" target="_blank" rel="noopener">reuters.com</a> ·
+        <a href="https://www.rferl.org/a/georgia-foreign-agents-protest/32934084.html" target="_blank" rel="noopener">rferl.org</a>
+      </li>
+      <li id="s13">
+        <strong>Terry Martin,</strong> <em>The Affirmative Action Empire: Nations and Nationalism in the Soviet Union, 1923–1939</em> (Cornell University Press, 2001), and an overview of Soviet indigenization policy (korenizatsiia) in the 1920s and 1930s.
+        <a href="https://en.wikipedia.org/wiki/Korenizatsiia" target="_blank" rel="noopener">policy summary</a>
+      </li>
+      <li id="s14">
+        <strong>Svante E. Cornell,</strong> <em>Small Nations and Great Powers: A Study of Ethnopolitical Conflict in the Caucasus</em> (Routledge, 2001), on Soviet institutional legacies and post-Soviet conflict dynamics in Abkhazia.
+        <a href="https://www.routledge.com/Small-Nations-and-Great-Powers-A-Study-of-Ethnopolitical-Conflict-in-the-Caucasus/Cornell/p/book/9780700711628" target="_blank" rel="noopener">routledge.com</a>
+      </li>
+      <li id="s15">
+        <strong>Fridrik Thordarson,</strong> "COLCHIS," <em>Encyclopaedia Iranica</em> (1992, updated 2016), on Colchis/Lazica and western Georgian historical geography, including continuity into later medieval formations.
+        <a href="https://www.iranicaonline.org/articles/colchis" target="_blank" rel="noopener">iranicaonline.org</a>
+      </li>
+      <li id="s16">
+        <strong>Kingdom of Abkhazia historical synthesis,</strong> with references to medieval chronicles and modern historiography debates on statehood, terminology, and later unification in the Georgian monarchy.
+        <a href="https://en.wikipedia.org/wiki/Kingdom_of_Abkhazia" target="_blank" rel="noopener">historical overview</a>
+      </li>
+      <li id="s17">
+        <strong>Andrey Kozyrev,</strong> Russia's first Foreign Minister (1992–1996), in a detailed interview recounting his direct involvement in the 1990s: Soviet collapse, Abkhazia war, weapon supplies to separatists, NATO relations, and the 1996 election.
+        <a href="https://www.youtube.com/watch?v=AWGuTEtv7xs" target="_blank" rel="noopener">YouTube interview</a>
+      </li>
+    </ol>
+    <p class="sources-note">
+      Where sources differ on exact numbers (for example, total displaced from Abkhazia, or casualty figures
+      in Mariupol), this page uses the more conservative figure cited by the institutions above. If you spot
+      something that should be corrected, please get in touch. Accuracy matters more to us than rhetoric.
+    </p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-line">When Sea Was Calm: a companion page</p>
+    <p class="footer-sub">
+      In solidarity with the people of Georgia and Ukraine.
+      <br/>Свобода. თავისუფლება. Freedom.
+    </p>
+  </div>
+  <svg class="footer-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#08161f" d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z"></path>
+  </svg>
+</footer>
+
+<!-- Ambient ocean (very low volume, must be enabled by user) -->
+<audio id="ambient" loop preload="none">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2dde668ca0.mp3?filename=ocean-waves-112906.mp3" type="audio/mpeg" />
+</audio>
+
+</body>
+</html>

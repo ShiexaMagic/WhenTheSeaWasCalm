@@ -1,0 +1,838 @@
+/* ===========================================================
+   When Sea Was Calm: companion site
+   Concept: the Black Sea as a silent witness from 1992 → today.
+   Palette shifts from calm dawn to stormy red as you scroll.
+   =========================================================== */
+
+:root {
+  --sea-deep: #04141d;
+  --sea-night: #07202d;
+  --sea-blue: #0e556f;
+  --sea-mist: #b9d4dc;
+  --sand: #e9dcc4;
+  --bone: #f4ede0;
+  --ember: #d94c3a;
+  --ember-soft: #e88072;
+  --ink: #0a1116;
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  color: var(--bone);
+  background: var(--sea-deep);
+  line-height: 1.6;
+  overflow-x: hidden;
+  /* Color of the page slowly shifts as scroll progresses (set via JS) */
+  transition: background-color 1s ease;
+}
+
+/* ---------- Tide progress bar ---------- */
+.tide-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.05);
+  z-index: 1000;
+}
+.tide-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--sea-mist), var(--ember));
+  transition: width 0.1s linear;
+}
+
+/* ---------- Sound toggle ---------- */
+.steps-logo-link {
+  position: fixed;
+  top: 14px;
+  left: 18px;
+  z-index: 999;
+  color: rgba(255,255,255,0.75);
+  width: 52px;
+  height: 52px;
+  display: block;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+.steps-logo-link svg { width: 100%; height: 100%; }
+.steps-logo-link:hover { color: #fff; opacity: 1; }
+
+.sound-toggle {
+  position: fixed;
+  top: 18px; right: 18px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+  color: var(--bone);
+  cursor: pointer;
+  z-index: 999;
+  font-family: var(--serif);
+  font-size: 22px;
+  transition: all 0.3s ease;
+}
+.sound-toggle:hover { border-color: var(--ember-soft); color: var(--ember-soft); }
+.sound-toggle.on { background: var(--ember); border-color: var(--ember); color: var(--bone); }
+
+/* =====================================================
+   HERO
+   ===================================================== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  background: #04141d; /* fallback if video hasn't loaded */
+}
+
+/* Full-cover video background */
+.hero-video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wave-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 40%;
+}
+.wave-back  { animation: waveSlide 18s linear infinite;         opacity: 0.85; bottom: -20%; height: 52%; z-index: 3; }
+.wave-mid   { animation: waveSlide 12s linear infinite reverse; opacity: 0.95; bottom: -10%; height: 52%; z-index: 4; }
+.wave-front { animation: waveSlide 8s  linear infinite;                        bottom:   0%; height: 52%; z-index: 5; }
+
+@keyframes waveSlide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 6;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 48px 24px 18%;
+}
+.hero-content .kicker { margin-bottom: 0; }
+.hero-content .hero-sub { margin-top: auto; }
+
+/* "WHEN THE SEA": behind the waves */
+.hero-title-behind {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 27%;
+  text-align: center;
+  pointer-events: none;
+  margin: 0;
+  padding: 0 3%;
+  line-height: 0.88;
+}
+
+/* "WAS CALM": in front of all waves */
+.hero-title-front {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  right: 0;
+  bottom: 11%;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 3%;
+  line-height: 0.88;
+}
+.front-line {
+  display: block;
+  font-family: 'Bebas Neue', var(--sans);
+  font-size: clamp(2.8rem, 11vw, 12rem);
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  text-shadow:
+    0 0 60px rgba(255,255,255,0.1),
+    0 2px 0 rgba(0,0,0,0.4);
+}
+
+/* Scroll-reveal: titles start hidden, JS adds .title-visible on first scroll */
+.scroll-title {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 1.1s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.scroll-title.title-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-title-front.scroll-title { transition-delay: 0.2s; }
+.behind-line {
+  display: block;
+  font-family: 'Bebas Neue', var(--sans);
+  font-size: clamp(2.8rem, 11vw, 12rem);
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  text-shadow:
+    0 0 60px rgba(255,255,255,0.08),
+    0 2px 0 rgba(0,0,0,0.4);
+}
+
+.kicker {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--sea-mist);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.3s forwards;
+}
+
+/* old .title, .title-line, .title-italic removed — title is now .hero-title-behind */
+
+.hero-sub {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-style: italic;
+  color: var(--sea-mist);
+  max-width: 540px;
+  opacity: 0;
+  animation: fadeUp 1.4s ease 1.6s forwards;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sea-mist);
+  opacity: 0;
+  animation: fadeUp 1.4s ease 2s forwards;
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--sea-mist), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50%      { transform: scaleY(1.4); opacity: 0.4; }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   GENERAL CHAPTER
+   ===================================================== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.container.narrow { max-width: 760px; }
+
+.chapter {
+  padding: 140px 0;
+  background: var(--sea-deep);
+  position: relative;
+}
+
+.chapter-eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--ember-soft);
+  margin-bottom: 24px;
+}
+
+.intro-chapter h2 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 40px;
+  color: var(--bone);
+}
+.intro-chapter h2 em {
+  font-style: italic;
+  color: var(--ember-soft);
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: var(--sea-mist);
+  margin-bottom: 24px;
+}
+.lede strong { color: var(--bone); font-weight: 600; }
+
+/* =====================================================
+   TIMELINE
+   ===================================================== */
+.timeline {
+  background: linear-gradient(180deg, var(--sea-deep) 0%, #0a1a25 50%, #1a0e10 100%);
+  padding: 60px 0 120px;
+  position: relative;
+}
+
+/* central vertical thread */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(185,212,220,0.25) 5%,
+    rgba(185,212,220,0.25) 55%,
+    rgba(217,76,58,0.5) 90%,
+    var(--ember) 100%);
+}
+
+/* ---- each event ---- */
+.event {
+  padding: 72px 0;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.event.visible { opacity: 1; transform: translateY(0); }
+
+.event-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+  align-items: center;
+  position: relative;
+}
+
+/* normal: year LEFT (right-aligned) | body RIGHT (left-aligned) */
+.event-year  { grid-column: 1; padding-right: 72px; text-align: right; position: relative; }
+.event-body  { grid-column: 2; padding-left: 72px; text-align: left; }
+
+/* reversed: body LEFT | year RIGHT */
+.event-grid.reverse .event-year { grid-column: 2; grid-row: 1; padding-right: 0; padding-left: 72px; text-align: left; }
+.event-grid.reverse .event-body { grid-column: 1; grid-row: 1; padding-left: 0; padding-right: 72px; text-align: right; }
+
+/* ---- year number + label ---- */
+.year-num {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--bone);
+  letter-spacing: -0.03em;
+}
+.year-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ember-soft);
+  margin-top: 8px;
+}
+
+/* ---- centre dot on the thread ---- */
+.event-year::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;              /* sits on the centre line */
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--bone);
+  border: 2px solid var(--sea-deep);
+  box-shadow: 0 0 0 4px rgba(185,212,220,0.2);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.event-grid.reverse .event-year::after { right: auto; left: -8px; }
+
+.event[data-mood="storm"] .event-year::after { background: var(--ember-soft); box-shadow: 0 0 0 5px rgba(217,76,58,0.2); }
+.event[data-mood="dark"]  .event-year::after { background: var(--ember);      box-shadow: 0 0 0 6px rgba(217,76,58,0.3); }
+.event[data-mood="now"]   .event-year::after { background: var(--bone);       box-shadow: 0 0 0 8px rgba(217,76,58,0.4); animation: nowPulse 2s ease-in-out infinite; }
+
+@keyframes nowPulse {
+  0%,100% { box-shadow: 0 0 0 8px rgba(217,76,58,0.4); }
+  50%     { box-shadow: 0 0 0 16px rgba(217,76,58,0.08); }
+}
+
+/* ---- body text ---- */
+.event-body h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--bone);
+}
+.event-body p {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--sea-mist);
+  margin-bottom: 12px;
+}
+.event-body p em { color: var(--ember-soft); font-style: italic; }
+.event-meta {
+  margin-top: 16px !important;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(185,212,220,0.45) !important;
+}
+
+/* ---- bridge pill ---- */
+.event.bridge { position: relative; }
+.event.bridge::before {
+  content: "the same playbook";
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--ember);
+  letter-spacing: 0.06em;
+  background: var(--sea-deep);
+  padding: 5px 16px;
+  border: 1px solid rgba(217,76,58,0.35);
+  border-radius: 20px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.event.today .year-num {
+  color: var(--ember-soft);
+  font-style: italic;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 760px) {
+  .timeline::before { left: 20px; }
+
+  .event-grid,
+  .event-grid.reverse {
+    grid-template-columns: 1fr;
+    padding: 0 24px 0 52px;
+  }
+
+  .event-year,
+  .event-grid.reverse .event-year {
+    grid-column: 1; grid-row: 1;
+    padding: 0 0 6px 0;
+    text-align: left;
+  }
+  .event-body,
+  .event-grid.reverse .event-body {
+    grid-column: 1; grid-row: 2;
+    padding: 0;
+    text-align: left;
+  }
+
+  .event-year::after,
+  .event-grid.reverse .event-year::after {
+    right: auto;
+    left: -40px;
+  }
+  .event.bridge::before { left: 52px; transform: none; font-size: 0.8rem; }
+  .event { padding: 48px 0; }
+}
+
+/* =====================================================
+   CONNECTION / MAP
+   ===================================================== */
+.connection {
+  background: #1a0e10;
+  padding: 140px 0;
+  text-align: center;
+}
+.connection-title {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 400;
+  margin-bottom: 60px;
+  color: var(--bone);
+  letter-spacing: -0.02em;
+}
+.connection-title em { font-style: italic; color: var(--ember); }
+
+.map-wrap {
+  max-width: 800px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+}
+.black-sea-map {
+  width: 100%;
+  height: auto;
+}
+.black-sea-map text {
+  font-family: var(--sans);
+  font-size: 11px;
+  fill: var(--sea-mist);
+  letter-spacing: 0.05em;
+}
+.map-caption {
+  font-family: var(--serif);
+  font-style: italic;
+  fill: var(--ember-soft) !important;
+  font-size: 13px !important;
+}
+.dot {
+  fill: var(--bone);
+  animation: dotPulse 3s ease-in-out infinite;
+}
+.dot-1992  { fill: var(--bone); }
+.dot-2008  { fill: var(--ember-soft); animation-delay: 0.4s; }
+.dot-2014  { fill: var(--ember); animation-delay: 0.8s; }
+.dot-2022a { fill: var(--ember); animation-delay: 1.2s; }
+.dot-2022b { fill: var(--ember); animation-delay: 1.6s; }
+@keyframes dotPulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%     { transform: scale(1.4); opacity: 0.7; }
+}
+.thread {
+  stroke-dashoffset: 600;
+  stroke-dasharray: 4 6, 600;
+  animation: drawThread 6s ease-out forwards;
+}
+@keyframes drawThread {
+  to { stroke-dashoffset: 0; }
+}
+
+.connection-text {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--sea-mist);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+  line-height: 1.7;
+}
+
+/* =====================================================
+   THE FILM
+   ===================================================== */
+.film {
+  background: var(--sea-deep);
+  padding: 140px 0;
+  text-align: center;
+}
+.film h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--bone);
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
+}
+.film .lede { text-align: center; margin: 0 auto 50px; max-width: 640px; }
+
+.film-meta {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+  margin: 50px 0;
+  text-align: center;
+}
+.film-meta li {
+  font-size: 0.95rem;
+  color: var(--bone);
+}
+.film-meta span {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ember-soft);
+  margin-bottom: 8px;
+}
+
+.pull-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  line-height: 1.5;
+  color: var(--sea-mist);
+  max-width: 680px;
+  margin: 60px auto 0;
+  padding: 40px 30px;
+  border-top: 1px solid rgba(217,76,58,0.3);
+  border-bottom: 1px solid rgba(217,76,58,0.3);
+  position: relative;
+}
+.pull-quote::before {
+  content: "“";
+  position: absolute;
+  top: -10px;
+  left: 30px;
+  font-size: 5rem;
+  color: var(--ember);
+  font-family: var(--serif);
+  line-height: 1;
+}
+
+/* =====================================================
+   INTERVIEW
+   ===================================================== */
+.interview-chapter {
+  background: linear-gradient(135deg, rgba(217,76,58,0.08) 0%, rgba(14,85,111,0.08) 100%);
+  padding: 100px 0;
+  border-top: 1px solid rgba(217, 76, 58, 0.2);
+  border-bottom: 1px solid rgba(217, 76, 58, 0.2);
+}
+
+.interview-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 16px 40px;
+  background: var(--ember);
+  color: var(--bone);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border: 2px solid var(--ember);
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  color: var(--ember);
+  box-shadow: 0 0 20px rgba(217, 76, 58, 0.3);
+}
+
+.interview-meta {
+  font-size: 0.85rem;
+  color: var(--sea-mist);
+  font-style: italic;
+  margin: 0;
+}
+
+.interview-video {
+  margin-top: 60px;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.interview-video video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+}
+
+/* =====================================================
+   CITATIONS & SOURCES
+   ===================================================== */
+.cite {
+  font-size: 0.65em;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 2px;
+}
+.cite a {
+  color: var(--ember-soft);
+  text-decoration: none;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(217, 76, 58, 0.35);
+  transition: all 0.2s ease;
+}
+.cite a:hover {
+  background: var(--ember);
+  color: var(--bone);
+  border-color: var(--ember);
+}
+
+.inline-link {
+  color: var(--ember-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ember-soft);
+  transition: color 0.2s ease;
+}
+.inline-link:hover { color: var(--bone); border-bottom-color: var(--bone); }
+
+.sources {
+  background: #07161f;
+  padding: 120px 0;
+  border-top: 1px solid rgba(217, 76, 58, 0.15);
+}
+.sources h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--bone);
+  margin-bottom: 24px;
+}
+.sources-intro {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--sea-mist);
+  margin-bottom: 50px;
+}
+.source-list {
+  list-style: none;
+  counter-reset: src;
+  padding: 0;
+  margin: 0 0 50px;
+}
+.source-list li {
+  counter-increment: src;
+  position: relative;
+  padding: 18px 0 18px 56px;
+  border-bottom: 1px solid rgba(185, 212, 220, 0.08);
+  font-size: 0.95rem;
+  color: var(--sea-mist);
+  line-height: 1.6;
+  scroll-margin-top: 80px;
+}
+.source-list li::before {
+  content: counter(src);
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 76, 58, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--ember-soft);
+}
+.source-list li:target {
+  background: rgba(217, 76, 58, 0.08);
+  border-radius: 6px;
+}
+.source-list li:target::before {
+  background: var(--ember);
+  color: var(--bone);
+  border-color: var(--ember);
+}
+.source-list strong {
+  color: var(--bone);
+  font-weight: 500;
+}
+.source-list em { font-style: italic; color: var(--bone); }
+.source-list a {
+  color: var(--ember-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(232, 128, 114, 0.5);
+  margin-left: 4px;
+  transition: color 0.2s ease;
+}
+.source-list a:hover { color: var(--bone); border-bottom-color: var(--bone); }
+.sources-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(185, 212, 220, 0.7);
+  line-height: 1.7;
+  padding-top: 30px;
+  border-top: 1px solid rgba(185, 212, 220, 0.1);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.site-footer {
+  background: #08161f;
+  padding: 100px 0 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.footer-line {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--bone);
+  margin-bottom: 18px;
+}
+.footer-sub {
+  font-size: 0.85rem;
+  color: var(--sea-mist);
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+  opacity: 0.7;
+}
+.footer-wave {
+  display: block;
+  width: 100%;
+  height: 80px;
+  margin-top: 60px;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 760px) {
+  .chapter { padding: 80px 0; }
+  .film-meta { gap: 24px; flex-direction: column; }
+
+  /* Hero titles: mobile needs higher positions because hero is taller */
+  .hero-title-behind { bottom: 34%; }
+  .hero-title-front  { bottom: 18%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
