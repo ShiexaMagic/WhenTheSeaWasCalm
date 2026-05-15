@@ -145,6 +145,7 @@ body {
   margin: 0;
   padding: 0 3%;
   line-height: 0.88;
+  box-sizing: border-box;
 }
 
 /* "WAS CALM": in front of all waves */
@@ -158,6 +159,7 @@ body {
   pointer-events: none;
   padding: 0 3%;
   line-height: 0.88;
+  box-sizing: border-box;
 }
 .front-line {
   display: block;
@@ -222,6 +224,7 @@ body {
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
+  width: max-content;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -823,10 +826,32 @@ body {
 @media (max-width: 760px) {
   .chapter { padding: 80px 0; }
   .film-meta { gap: 24px; flex-direction: column; }
+  .hero-content { padding-top: 74px; }
+  .kicker {
+    padding-left: 84px;
+    padding-right: 84px;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    line-height: 1.6;
+  }
+  .steps-logo-link { width: 44px; height: 44px; top: 12px; left: 12px; }
+  .sound-toggle { top: 12px; right: 12px; width: 42px; height: 42px; }
+  .scroll-hint {
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    transform: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   /* Hero titles: mobile needs higher positions because hero is taller */
-  .hero-title-behind { bottom: 34%; }
-  .hero-title-front  { bottom: 18%; }
+  .hero-title-behind { bottom: 29%; padding-left: 3%; padding-right: 3%; }
+  .hero-title-front  { bottom: 20%; padding-left: 3%; padding-right: 3%; }
+  .hero-title-behind,
+  .hero-title-front {
+    max-width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
